@@ -24,8 +24,6 @@ public class Ticket {
 
     private String description;
 
-    private String category;
-
     private int priority;
 
     private LocalDateTime dateTime;
@@ -37,4 +35,12 @@ public class Ticket {
 
     @OneToMany (mappedBy = "ticket")
     private List <Response> listResponse;
+
+    @ManyToMany
+    @JoinTable(
+            name = "ticket_category",
+            joinColumns = @JoinColumn(name = "ticket_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private List <Category> listCategory;
 }
