@@ -4,6 +4,7 @@ import app.entities.User;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.br.CPF;
 
 @Getter
 @Setter
@@ -22,6 +23,7 @@ public class RequestUser {
 
     @NotBlank(message = "CPF is mandatory")
     @Pattern(regexp = "\\d{11}", message = "CPF must be 11 digits")
+    @CPF(message = "CPF invalido")
     private String cpf;
 
     public User user(){
