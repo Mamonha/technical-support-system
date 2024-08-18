@@ -1,12 +1,15 @@
 package app.dto.Ticket;
 
+import app.dto.category.ResponseCategory;
+import app.dto.user.ResponseUser;
 import app.entities.Ticket;
-import app.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -14,22 +17,28 @@ import java.time.LocalDateTime;
 public class ResponseTicket {
 
     private Long id;
-    private String label;
-    private String explanation;
-    private int privilege;
+    private String title;
+    private String description;
+    private int priority;
     private LocalDateTime dateTime;
-    private int Ticketstatus;
-    private User person;
+    private int status;
+    private ResponseUser user;
+    private List<ResponseCategory> categories;
 
-    public static ResponseTicket ticket(Ticket ticket){
+    public static ResponseTicket ticket(Ticket ticket) {
+        List<ResponseCategory> categoryDTOs = ticket.getListCategory().stream()
+                .map(ResponseCategory::category)
+                .collect(Collectors.toList());
+
         return new ResponseTicket(
-                ticket.getId(),
-                ticket.getTitle(),
-                ticket.getDescription(),
-                ticket.getPriority(),
-                ticket.getDateTime(),
-                ticket.getStatus(),
-                ticket.getUser()
+            ticket.getId(),
+            ticket.getTitle(),
+            ticket.getDescription(),
+            ticket.getPriority(),
+            ticket.getDateTime(),
+            ticket.getStatus(),
+            ResponseUser.user(ticket.getUser()),
+            categoryDTOs
         );
     }
 }
