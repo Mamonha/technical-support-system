@@ -2,12 +2,13 @@ package app.dto.Ticket;
 
 import app.entities.Ticket;
 import app.entities.User;
-import com.fasterxml.jackson.datatype.jsr310.deser.key.LocalDateTimeKeyDeserializer;
+import app.enums.Priority;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,30 +19,22 @@ public class RequestTicket {
     private String title;
 
     @NotBlank(message = "Description is mandatory")
-    @Max(value = 700,  message ="Maximum characters 700")
     private String description;
 
     @NotNull
-    private int priority;
-
-    @PastOrPresent
-    private LocalDateTime dateTime;
+    private Priority priority;
 
     @NotNull
-    private int status;
+    private Long userId;
 
     @NotNull
-    private User user;
+    private List<Long> categoryIds;
 
     public Ticket ticket (){
         Ticket ticket= new Ticket();
         ticket.setTitle(this.title);
         ticket.setDescription(this.description);
-        ticket.setPriority(this.priority);
-        ticket.setDateTime(this.dateTime);
-        ticket.setStatus(this.status);
-        ticket.setUser(this.user);
+        ticket.setPriority(this.priority.getValue());
         return ticket;
     }
-
 }

@@ -1,5 +1,6 @@
 package app.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,6 +32,7 @@ public class Ticket {
     private int status;
 
     @ManyToOne (cascade = CascadeType.ALL)
+    @JsonManagedReference
     private User user;
 
     @OneToMany (mappedBy = "ticket")
@@ -42,5 +44,7 @@ public class Ticket {
             joinColumns = @JoinColumn(name = "ticket_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
+
+    @JsonManagedReference
     private List <Category> listCategory;
 }

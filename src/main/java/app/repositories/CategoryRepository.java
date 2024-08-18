@@ -1,4 +1,4 @@
-package app.resositories;
+package app.repositories;
 
 import app.entities.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
