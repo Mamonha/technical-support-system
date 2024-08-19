@@ -1,5 +1,8 @@
 package app.services;
 
+import app.dto.Ticket.ResponseTicket;
+import app.dto.user.ResponseUser;
+import app.entities.Ticket;
 import app.entities.User;
 import app.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,5 +24,10 @@ public class UserService {
 
     public List<User> index(){
         return userRepository.findAll();
+    }
+
+    public ResponseUser show (Long id){
+        User user= this.userRepository.findById(id).get();
+        return ResponseUser.user(user);
     }
 }

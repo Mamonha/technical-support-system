@@ -1,11 +1,13 @@
 package app.dto.user;
 
 import app.entities.User;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class ResponseUser {
 
     private Long id;
@@ -14,13 +16,7 @@ public class ResponseUser {
     private String phoneNumber;
     private String cpfNumber;
 
-    public ResponseUser(Long id, String nome, String emailAddress, String phoneNumber, String cpfNumber) {
-        this.id = id;
-        this.nome = nome;
-        this.emailAddress = emailAddress;
-        this.phoneNumber = phoneNumber;
-        this.cpfNumber = cpfNumber;
-    }
+
 
     public static ResponseUser user(User user) {
         return new ResponseUser(

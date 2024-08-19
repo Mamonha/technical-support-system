@@ -26,9 +26,9 @@ public class Response {
 
     private LocalDateTime dateTime;
 
-    @ManyToOne (cascade = CascadeType.ALL)
+    @ManyToOne
     private User user;
 
-    @ManyToOne (cascade= CascadeType.ALL)
+    @ManyToOne
     private Ticket ticket;
 }

@@ -1,5 +1,7 @@
 package app.dto.response;
 
+import app.dto.Ticket.ResponseTicket;
+import app.dto.user.ResponseUser;
 import app.entities.Response;
 import app.entities.Ticket;
 import app.entities.User;
@@ -18,18 +20,19 @@ public class ResponseResponse {
     private Long id;
     private String explanation;
     private LocalDateTime dateTime;
-    private User person;
-    private Ticket ticket;
 
-    private ResponseResponse response (Response response){
+
+
+
+    public static ResponseResponse response (Response response){
         return new ResponseResponse(
-            getId(),
-            getExplanation(),
-            getDateTime(),
-            getPerson(),
-            getTicket()
+                response.getId(),
+                response.getDescription(),
+                response.getDateTime()
         );
     }
+
+
 
 
 }

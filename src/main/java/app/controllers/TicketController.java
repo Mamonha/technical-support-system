@@ -35,8 +35,24 @@ public class TicketController {
 
     @GetMapping
     public ResponseEntity<List<ResponseTicket>> index() {
-        List<ResponseTicket> tickets = ticketService.index();
-        return ResponseEntity.ok(tickets);
+        try {
+            List<ResponseTicket> tickets = ticketService.index();
+            return ResponseEntity.ok(tickets);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+
+        }
+    }
+
+    @GetMapping ("/{id}")
+    public ResponseEntity<ResponseTicket> show(@PathVariable Long id) {
+        try {
+            ResponseTicket ticket = ticketService.show(id);
+            return ResponseEntity.ok(ticket);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+
+        }
     }
 
     @PostMapping("/response")
@@ -46,6 +62,27 @@ public class TicketController {
             return ResponseEntity.status(HttpStatus.CREATED).body("Ticket Response created successfully.");
         }catch (Exception err){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to create response: " + err.getMessage());
+        }
+    }
+
+    @PostMapping("/close")
+    public ResponseEntity<String> closeTicket(@Valid @RequestBody RequestResponse request){
+        try{
+            responseService.close(request);
+            return ResponseEntity.status(HttpStatus.CREATED).body("ticket closed successfully.");
+        }catch (Exception err){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to closed ticket: " + err.getMessage());
+        }
+    }
+
+    @DeleteMapping("/destroy/{id}")
+    public ResponseEntity <String> destroy (@PathVariable Long id){
+        try {
+            String mensagem = this.ticketService.destroy(id);
+            return new ResponseEntity<>(mensagem, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+
         }
     }
 

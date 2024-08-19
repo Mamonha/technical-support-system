@@ -31,7 +31,7 @@ public class Ticket {
 
     private int status;
 
-    @ManyToOne (cascade = CascadeType.ALL)
+    @ManyToOne
     @JsonManagedReference
     private User user;
 
