@@ -21,9 +21,6 @@ public class ResponseResponse {
     private String explanation;
     private LocalDateTime dateTime;
 
-
-
-
     public static ResponseResponse response (Response response){
         return new ResponseResponse(
                 response.getId(),
@@ -31,8 +28,4 @@ public class ResponseResponse {
                 response.getDateTime()
         );
     }
-
-
-
-
 }
