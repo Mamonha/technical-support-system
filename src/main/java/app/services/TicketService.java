@@ -73,4 +73,11 @@ public class TicketService {
         ticketRepository.deleteById(id);
         return "Ticket deleted successfully";
     }
+
+    public List<ResponseTicket> findByStatus(int status) {
+        List<Ticket> tickets = ticketRepository.ticketStatus(status);
+        return tickets.stream()
+                .map(ResponseTicket::ticket)
+                .collect(Collectors.toList());
+    }
 }

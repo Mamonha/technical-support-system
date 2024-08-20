@@ -5,6 +5,7 @@ import app.dto.Ticket.ResponseTicket;
 import app.dto.response.RequestResponse;
 import app.dto.user.RequestUser;
 import app.entities.Ticket;
+import app.enums.TicketStatus;
 import app.services.ResponseService;
 import app.services.TicketService;
 import jakarta.validation.Valid;
@@ -75,11 +76,22 @@ public class TicketController {
         }
     }
 
-    @DeleteMapping("/destroy/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity <String> destroy (@PathVariable Long id){
         try {
             String mensagem = this.ticketService.destroy(id);
             return new ResponseEntity<>(mensagem, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+
+        }
+    }
+
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<ResponseTicket>> findByStatus(@PathVariable int status) {
+        try {
+            List<ResponseTicket> tickets = ticketService.findByStatus(status);
+            return ResponseEntity.ok(tickets);
         }catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 
