@@ -98,4 +98,15 @@ public class TicketController {
         }
     }
 
+    @GetMapping("/Waiting/{status}")
+    public ResponseEntity<List<ResponseTicket>> findAllByOrderBydateTimedAsc(@PathVariable int status) {
+        try {
+            List<ResponseTicket> tickets = ticketService.orderBydateTimed(status);
+            return ResponseEntity.ok(tickets);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+
+        }
+    }
+
 }

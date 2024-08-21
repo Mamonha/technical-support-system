@@ -80,4 +80,11 @@ public class TicketService {
                 .map(ResponseTicket::ticket)
                 .collect(Collectors.toList());
     }
+
+    public List<ResponseTicket> orderBydateTimed(int status) {
+        List<Ticket> tickets = ticketRepository.orderFindDateTime(status);
+        return tickets.stream()
+                .map(ResponseTicket::ticket)
+                .collect(Collectors.toList());
+    }
 }
