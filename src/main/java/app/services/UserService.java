@@ -30,4 +30,19 @@ public class UserService {
         User user= this.userRepository.findById(id).get();
         return ResponseUser.user(user);
     }
+
+    public String update(User user, Long id){
+        try {
+            User userToUpdate = userRepository.findById(id).orElseThrow(() ->
+                    new IllegalArgumentException("Invalid user ID: " + id)
+            );
+            user.setId(id);
+            user.setListTicket(userToUpdate.getListTicket());
+            user.setListResponse(userToUpdate.getListResponse());
+            userRepository.save(user);
+            return "User updated with success" + " User: " + user.getName() + " ID: " + user.getId();
+        }catch (Exception e){
+            return "Error updating user: " + e.getMessage();
+        }
+    }
 }

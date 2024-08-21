@@ -1,5 +1,6 @@
 package app.controllers;
 
+import app.dto.user.RequestUpadate;
 import app.dto.user.RequestUser;
 import app.dto.user.ResponseUser;
 import app.entities.User;
@@ -54,4 +55,15 @@ public class UserController {
 
         }
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> update(@Valid @RequestBody RequestUpadate request, @PathVariable Long id) {
+        try {
+            String result = userService.update(request.user(), id);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } catch (Exception err) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to update user: " + err.getMessage());
+        }
+    }
+
 }
