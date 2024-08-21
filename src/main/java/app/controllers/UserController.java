@@ -43,4 +43,15 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to List users: " + err.getMessage());
         }
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity <ResponseUser> destroy (@PathVariable Long id){
+        try {
+            ResponseUser responseUser = this.userService.show(id);
+            return new ResponseEntity<>(responseUser, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+
+        }
+    }
 }
