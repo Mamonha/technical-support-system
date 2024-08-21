@@ -2,6 +2,7 @@ package app.services;
 
 import app.dto.Ticket.RequestTicket;
 import app.dto.Ticket.ResponseTicket;
+import app.dto.Ticket.TicketSimplified;
 import app.entities.Category;
 import app.entities.Response;
 import app.entities.Ticket;
@@ -74,17 +75,17 @@ public class TicketService {
         return "Ticket deleted successfully";
     }
 
-    public List<ResponseTicket> findByStatus(int status) {
+    public List<TicketSimplified> findByStatus(int status) {
         List<Ticket> tickets = ticketRepository.ticketStatus(status);
         return tickets.stream()
-                .map(ResponseTicket::ticket)
+                .map(TicketSimplified::tik)
                 .collect(Collectors.toList());
     }
 
-    public List<ResponseTicket> orderBydateTimed(int status) {
+    public List<TicketSimplified> orderBydateTimed(int status) {
         List<Ticket> tickets = ticketRepository.orderFindDateTime(status);
         return tickets.stream()
-                .map(ResponseTicket::ticket)
+                .map(TicketSimplified::tik)
                 .collect(Collectors.toList());
     }
 }

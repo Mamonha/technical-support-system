@@ -2,6 +2,7 @@ package app.controllers;
 
 import app.dto.Ticket.RequestTicket;
 import app.dto.Ticket.ResponseTicket;
+import app.dto.Ticket.TicketSimplified;
 import app.dto.response.RequestResponse;
 import app.dto.user.RequestUser;
 import app.entities.Ticket;
@@ -88,9 +89,9 @@ public class TicketController {
     }
 
     @GetMapping("/status/{status}")
-    public ResponseEntity<List<ResponseTicket>> findByStatus(@PathVariable int status) {
+    public ResponseEntity<List<TicketSimplified>> findByStatus(@PathVariable int status) {
         try {
-            List<ResponseTicket> tickets = ticketService.findByStatus(status);
+            List<TicketSimplified> tickets = ticketService.findByStatus(status);
             return ResponseEntity.ok(tickets);
         }catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -99,9 +100,9 @@ public class TicketController {
     }
 
     @GetMapping("/Waiting/{status}")
-    public ResponseEntity<List<ResponseTicket>> findAllByOrderBydateTimedAsc(@PathVariable int status) {
+    public ResponseEntity<List<TicketSimplified>> findAllByOrderBydateTimedAsc(@PathVariable int status) {
         try {
-            List<ResponseTicket> tickets = ticketService.orderBydateTimed(status);
+            List<TicketSimplified> tickets = ticketService.orderBydateTimed(status);
             return ResponseEntity.ok(tickets);
         }catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
