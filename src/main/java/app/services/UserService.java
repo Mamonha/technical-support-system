@@ -5,6 +5,7 @@ import app.dto.user.ResponseUser;
 import app.entities.Ticket;
 import app.entities.User;
 import app.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,5 +45,12 @@ public class UserService {
         }catch (Exception e){
             return "Error updating user: " + e.getMessage();
         }
+    }
+
+    public String destroy(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+        userRepository.delete(user);
+        return "User deleted successfully";
     }
 }
