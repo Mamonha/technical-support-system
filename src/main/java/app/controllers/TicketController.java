@@ -99,7 +99,7 @@ public class TicketController {
         }
     }
 
-    @GetMapping("/Waiting/{status}")
+    @GetMapping("/waiting/{status}")
     public ResponseEntity<List<TicketSimplified>> findAllByOrderBydateTimedAsc(@PathVariable int status) {
         try {
             List<TicketSimplified> tickets = ticketService.orderBydateTimed(status);
