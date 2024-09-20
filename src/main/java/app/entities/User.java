@@ -40,5 +40,11 @@ public class User {
     @JsonBackReference
     private List<Response> listResponse;
 
-
+    public User(String name, String email, String contact, String cpf, int type) {
+        this.name = name;
+        this.email = email;
+        this.contact = contact;
+        this.cpf = cpf;
+        this.type = type;
+    }
 }

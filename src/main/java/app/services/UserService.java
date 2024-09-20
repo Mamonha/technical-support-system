@@ -14,9 +14,9 @@ import java.util.List;
 public class UserService {
     @Autowired
     protected UserRepository userRepository;
-    public void store(User user) throws Exception {
+    public User store(User user) throws Exception {
         try {
-            userRepository.save(user);
+            return userRepository.save(user);
         } catch (Exception e) {
             throw new Exception("Failed to create user: " + e.getMessage());
         }
@@ -33,10 +33,10 @@ public class UserService {
 
     public String update(User user, Long id){
         try {
+            user.setId(id);
             User userToUpdate = userRepository.findById(id).orElseThrow(() ->
                     new IllegalArgumentException("Invalid user ID: " + id)
             );
-            user.setId(id);
             user.setListTicket(userToUpdate.getListTicket());
             user.setListResponse(userToUpdate.getListResponse());
             userRepository.save(user);
