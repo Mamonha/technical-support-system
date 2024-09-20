@@ -66,4 +66,13 @@ public class UserController {
         }
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        try {
+            String mensagem = this.userService.destroy(id);
+            return new ResponseEntity<>(mensagem, HttpStatus.OK);
+        } catch (Exception err) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
