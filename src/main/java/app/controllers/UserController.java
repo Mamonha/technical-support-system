@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity <ResponseUser> destroy (@PathVariable Long id){
+    public ResponseEntity <ResponseUser> show (@PathVariable Long id){
         try {
             ResponseUser responseUser = this.userService.show(id);
             return new ResponseEntity<>(responseUser, HttpStatus.OK);

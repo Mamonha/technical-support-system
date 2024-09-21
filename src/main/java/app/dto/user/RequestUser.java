@@ -2,10 +2,11 @@ package app.dto.user;
 
 import app.entities.User;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.br.CPF;
-
+@AllArgsConstructor
 @Getter
 @Setter
 public class RequestUser {
