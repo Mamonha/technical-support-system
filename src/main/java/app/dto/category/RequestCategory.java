@@ -15,6 +15,7 @@ import java.util.List;
 public class RequestCategory {
 
     @NotBlank(message = "name is mandatory")
+    @NotNull (message = "name is Null")
     private String name;
 
     private String description;

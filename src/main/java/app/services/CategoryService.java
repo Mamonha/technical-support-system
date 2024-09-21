@@ -16,10 +16,13 @@ public class CategoryService {
 
     @Autowired
     protected CategoryRepository categoryRepository;
-    
-    public void store(Category category) throws Exception {
+
+    public Category store(Category category) throws Exception {
+        if (category.getNome() == null || category.getNome().isBlank()) {
+            throw new IllegalArgumentException("Name cannot be null or blank");
+        }
         try {
-            categoryRepository.save(category);
+           return categoryRepository.save(category);
         } catch (Exception e) {
             throw new Exception("Failed to create category: " + e.getMessage());
         }

@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,11 +20,13 @@ public class CategoryController {
     protected CategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<String> store(@Valid @RequestBody RequestCategory request){
-        try{
+    public ResponseEntity<String> store(@Valid @RequestBody RequestCategory request) {
+        try {
             categoryService.store(request.category());
             return ResponseEntity.status(HttpStatus.CREATED).body("Category created successfully.");
-        }catch (Exception err){
+        } catch (MethodArgumentNotValidException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Validation error: " + ex.getMessage());
+        } catch (Exception err) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to create category: " + err.getMessage());
         }
     }
