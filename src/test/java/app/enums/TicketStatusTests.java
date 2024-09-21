@@ -6,21 +6,21 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class PriorityTests {
+public class TicketStatusTests {
 
     @Test
     public void testFromValue_ValidValues() {
-        assertEquals(Priority.LOW, Priority.fromValue(1));
-        assertEquals(Priority.MEDIUM, Priority.fromValue(2));
-        assertEquals(Priority.HIGH, Priority.fromValue(3));
+        assertEquals(TicketStatus.OPEN, TicketStatus.fromValue(1));
+        assertEquals(TicketStatus.IN_PROGRESS, TicketStatus.fromValue(2));
+        assertEquals(TicketStatus.CLOSED, TicketStatus.fromValue(3));
     }
 
     @Test
     public void testFromValue_InvalidValue() {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            Priority.fromValue(4);
+            TicketStatus.fromValue(4);
         });
 
-        assertEquals("Invalid priority value: 4", exception.getMessage());
+        assertEquals("Invalid ticket status value: 4", exception.getMessage());
     }
 }
