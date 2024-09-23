@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 
 @SpringBootTest
 public class UserControllerTests {
@@ -33,9 +34,9 @@ public class UserControllerTests {
     UserRepository userRepository;
 
     @BeforeEach
-    void setup(){
-        User user= new User(
-                1l,
+    void setup() {
+        User user = new User(
+                1L,
                 "Mamonha",
                 "mamonha@gmail.com",
                 "45 99999-4565",
@@ -67,7 +68,7 @@ public class UserControllerTests {
                 new ArrayList<Response>()
         );
 
-        List<User> users= new ArrayList<>();
+        List<User> users = new ArrayList<>();
         users.add(user);
         users.add(user2);
         users.add(user3);
@@ -75,7 +76,7 @@ public class UserControllerTests {
         Mockito.when(this.userRepository.save(Mockito.any())).thenReturn(user);
         Mockito.when(this.userRepository.findAll()).thenReturn(users);
         Mockito.when(this.userRepository.findById(3L)).thenReturn(Optional.of(user3));
-
+        Mockito.doNothing().when(this.userRepository).delete(Mockito.any());
     }
 
     @Test
@@ -128,4 +129,84 @@ public class UserControllerTests {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expected, response.getBody() );
     }
+
+
+
+    @Test
+    void indexTestException() {
+        // Simulando uma exceção ao tentar listar usuários
+        Mockito.doThrow(new RuntimeException("Error fetching users"))
+                .when(userRepository).findAll();
+
+        ResponseEntity<?> response = userController.index();
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Failed to List users: Error fetching users", response.getBody());
+    }
+
+    @Test
+    void showTestException() {
+        // Simulando uma exceção ao tentar mostrar um usuário que não existe
+        Mockito.when(userRepository.findById(4L)).thenThrow(new RuntimeException("User not found"));
+
+        ResponseEntity<ResponseUser> response = userController.show(4L);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(null, response.getBody());
+    }
+
+//    @Test
+//    void updateTestException() {
+//        // Criação do usuário com ID 1
+//        User user = new User(
+//                1L,
+//                "Mamonha",
+//                "Mamonha@gmail.com",
+//                "45 97777-4569",
+//                "8018745678",
+//                1,
+//                new ArrayList<>(),
+//                new ArrayList<>()
+//        );
+//
+//        // Mock para o método findById para retornar o usuário com ID 1
+//        Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+//
+//        RequestUpadate userUpdateRequest = new RequestUpadate(
+//                1L, // ID do usuário que você espera que cause a exceção
+//                "NãoMamonha",
+//                "Mamonha@gmail.com",
+//                "45 97777-4569",
+//                "8018745678"
+//        );
+//
+//        // Configurando o mock para lançar uma exceção ao salvar o usuário
+//        Mockito.doThrow(new RuntimeException("Update failed"))
+//                .when(userRepository).save(Mockito.argThat(u -> u.getId().equals(1L)));
+//
+//        ResponseEntity<String> response = userController.update(userUpdateRequest, 1L);
+//
+//        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+//        assertEquals("Failed to update user: Update failed", response.getBody());
+//    }
+
+    @Test
+    void deleteTest() {
+
+        ResponseEntity<String> response = userController.delete(3L);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    void deleteTestException() {
+        Mockito.doThrow(new RuntimeException("Delete failed"))
+                .when(userRepository).deleteById(1L);
+
+        ResponseEntity<String> response = userController.delete(1L);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
+
+
 }

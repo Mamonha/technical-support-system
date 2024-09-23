@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,9 @@ public class CategoryControllerTest {
     CategoryController categoryController;
 
     @MockBean
+    CategoryService categoryService;
+
+    @MockBean
     CategoryRepository categoryRepository;
 
     @BeforeEach
@@ -36,9 +40,12 @@ public class CategoryControllerTest {
         categories.add(new Category(1L, "Technology", "Technology related topics", new ArrayList<>()));
         categories.add(new Category(2L, "Health", "Health and wellness topics", new ArrayList<>()));
         categories.add(new Category(3L, "Education", "Educational topics and discussions", new ArrayList<>()));
-
+        List <ResponseCategory> responseCategories= new ArrayList<>();
+        for (Category category1: categories){
+           responseCategories.add(ResponseCategory.category(category1));
+        }
         Mockito.when(categoryRepository.save(Mockito.any())).thenReturn(category);
-        Mockito.when(categoryRepository.findAll()).thenReturn(categories);
+        Mockito.when(categoryService.index()).thenReturn(responseCategories);
     }
 
     @Test
@@ -62,15 +69,30 @@ public class CategoryControllerTest {
         assertEquals("Technology", responseCategories.get(0).getName());
     }
 
-    @Test
-    void testStoreNameFailure() throws Exception {
 
+    @Test
+    void testStoreGeneralException() throws Exception {
         RequestCategory request = new RequestCategory();
+        request.setName("Technology");
         request.setDescription("Technology related topics");
+
+        Mockito.doThrow(new RuntimeException("General error"))
+                .when(categoryService).store(Mockito.any());
 
         ResponseEntity<String> response = categoryController.store(request);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Failed to create category: Name cannot be null or blank", response.getBody());
+        assertEquals("Failed to create category: General error", response.getBody());
+    }
+
+    @Test
+    void testIndexGeneralException() {
+        Mockito.doThrow(new RuntimeException("General error"))
+                .when(categoryService).index();
+
+        ResponseEntity<List<ResponseCategory>> response = categoryController.index();
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(null, response.getBody());
     }
 }

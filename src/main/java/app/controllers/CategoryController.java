@@ -24,8 +24,6 @@ public class CategoryController {
         try {
             categoryService.store(request.category());
             return ResponseEntity.status(HttpStatus.CREATED).body("Category created successfully.");
-        } catch (MethodArgumentNotValidException ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Validation error: " + ex.getMessage());
         } catch (Exception err) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to create category: " + err.getMessage());
         }
