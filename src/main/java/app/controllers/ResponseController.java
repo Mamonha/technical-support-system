@@ -27,7 +27,6 @@ public class ResponseController {
             return ResponseEntity.ok(responses);
         }catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-
         }
     }
 }
