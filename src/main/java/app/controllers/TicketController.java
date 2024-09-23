@@ -42,7 +42,6 @@ public class TicketController {
             return ResponseEntity.ok(tickets);
         }catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-
         }
     }
 
