@@ -15,9 +15,20 @@ import java.util.List;
 public class UserService {
     @Autowired
     protected UserRepository userRepository;
+
+    @Autowired
+    private SendEmailService sendEmailService;
+
     public User store(User user) throws Exception {
         try {
-            return userRepository.save(user);
+            User userBd =userRepository.save(user);
+            String emailBody = "Dear "+userBd.getName()+",\n\n" +
+                    "Welcome to Technical Support System!\n\n" +
+                    "We are excited to inform you that your account has been successfully created. You can now log in and start exploring all the features available to you.\n\n" +
+                    "Please make sure to keep your login details safe. If you did not create this account, or if you have any questions, feel free to contact our support team.\n\n" +
+                    "Thank you for choosing Technical Support System! We are thrilled to have you onboard.\n\n";
+            sendEmailService.sendEmailText(userBd.getEmail(), "Welcome to Technical Support System – Account Successfully Created!", emailBody  );
+            return userBd;
         } catch (Exception e) {
             throw new Exception("Failed to create user: " + e.getMessage());
         }
