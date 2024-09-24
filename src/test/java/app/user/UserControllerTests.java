@@ -8,6 +8,7 @@ import app.entities.Response;
 import app.entities.Ticket;
 import app.entities.User;
 import app.repositories.UserRepository;
+import app.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -21,8 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertLinesMatch;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doThrow;
 
 @SpringBootTest
 public class UserControllerTests {
@@ -73,10 +76,10 @@ public class UserControllerTests {
         users.add(user2);
         users.add(user3);
 
-        Mockito.when(this.userRepository.save(Mockito.any())).thenReturn(user);
+        Mockito.when(this.userRepository.save(any())).thenReturn(user);
         Mockito.when(this.userRepository.findAll()).thenReturn(users);
         Mockito.when(this.userRepository.findById(3L)).thenReturn(Optional.of(user3));
-        Mockito.doNothing().when(this.userRepository).delete(Mockito.any());
+        Mockito.doNothing().when(this.userRepository).delete(any());
     }
 
     @Test
@@ -130,81 +133,74 @@ public class UserControllerTests {
         assertEquals(expected, response.getBody() );
     }
 
-
-
     @Test
     void indexTestException() {
         // Simulando uma exceção ao tentar listar usuários
-        Mockito.doThrow(new RuntimeException("Error fetching users"))
+        doThrow(new RuntimeException("Error fetching users"))
                 .when(userRepository).findAll();
-
         ResponseEntity<?> response = userController.index();
-
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("Failed to List users: Error fetching users", response.getBody());
     }
 
     @Test
     void showTestException() {
-        // Simulando uma exceção ao tentar mostrar um usuário que não existe
         Mockito.when(userRepository.findById(4L)).thenThrow(new RuntimeException("User not found"));
-
         ResponseEntity<ResponseUser> response = userController.show(4L);
-
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals(null, response.getBody());
     }
 
+    @Test
+    public void testStore_ExceptionThrown() throws Exception {
+        doThrow(new RuntimeException("Simulated Exception")).when(userRepository).save(any());
+        RequestUser requestUser = new RequestUser();
+        requestUser.setName("Mamonha");
+        requestUser.setCpf("80148742939");
+        requestUser.setEmail("email@gmail.com");
+        requestUser.setContact("45 99999-4558");
+        ResponseEntity<String> response = userController.store(requestUser);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertTrue(response.getBody().contains("Failed to create user: Simulated Exception"));
+    }
+
 //    @Test
-//    void updateTestException() {
-//        // Criação do usuário com ID 1
+//    public void testUpdate_ExceptionThrown() {
 //        User user = new User(
+//                1L,
+//                "Maria",
+//                "maria@gmail.com",
+//                "45 97777-4569",
+//                "8018745678",
+//                1,
+//                new ArrayList<Ticket>(),
+//                new ArrayList<Response>()
+//        );
+//        Mockito.when(this.userRepository.findById(1L)).thenReturn(Optional.of(user));
+//        doThrow(new RuntimeException("Simulated Exception")).when(userRepository).save(any());
+//        RequestUpadate requestUpdate = new RequestUpadate(
 //                1L,
 //                "Mamonha",
 //                "Mamonha@gmail.com",
 //                "45 97777-4569",
-//                "8018745678",
-//                1,
-//                new ArrayList<>(),
-//                new ArrayList<>()
+//                "80148742939"
 //        );
-//
-//        // Mock para o método findById para retornar o usuário com ID 1
-//        Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-//
-//        RequestUpadate userUpdateRequest = new RequestUpadate(
-//                1L, // ID do usuário que você espera que cause a exceção
-//                "NãoMamonha",
-//                "Mamonha@gmail.com",
-//                "45 97777-4569",
-//                "8018745678"
-//        );
-//
-//        // Configurando o mock para lançar uma exceção ao salvar o usuário
-//        Mockito.doThrow(new RuntimeException("Update failed"))
-//                .when(userRepository).save(Mockito.argThat(u -> u.getId().equals(1L)));
-//
-//        ResponseEntity<String> response = userController.update(userUpdateRequest, 1L);
-//
+//        ResponseEntity<String> response = userController.update(requestUpdate, 1L);
 //        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-//        assertEquals("Failed to update user: Update failed", response.getBody());
+//        assertTrue(response.getBody().contains("Failed to update user: Simulated Exception"));
 //    }
 
     @Test
     void deleteTest() {
-
         ResponseEntity<String> response = userController.delete(3L);
-
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     void deleteTestException() {
-        Mockito.doThrow(new RuntimeException("Delete failed"))
+        doThrow(new RuntimeException("Delete failed"))
                 .when(userRepository).deleteById(1L);
-
         ResponseEntity<String> response = userController.delete(1L);
-
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
 

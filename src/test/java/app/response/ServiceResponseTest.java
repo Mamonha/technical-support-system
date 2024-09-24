@@ -17,11 +17,13 @@ import app.services.ResponseService;
 import app.services.TicketService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -63,6 +65,64 @@ public class ServiceResponseTest {
         response1 = new Response();
         response2 = new Response();
         responseList = Arrays.asList(response1, response2);
+    }
+
+    @Test
+    public void testStore_Success() {
+        User user = new User();
+        user.setId(1L); // Define o ID do usuário
+        user.setName("John Doe"); // Exemplo de nome
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        Ticket ticket = new Ticket();
+        ticket.setId(1L); // Define o ID do ticket
+        ticket.setStatus(TicketStatus.OPEN.getValue());
+        when(ticketRepository.findById(1L)).thenReturn(Optional.of(ticket));
+
+        Response response = new Response();
+        response.setId(1L);
+        response.setDescription("This is a sample response.");
+        response.setDateTime(LocalDateTime.now()); //
+        response.setUser(user); //
+        response.setTicket(ticket);
+
+        ArgumentCaptor<Response> responseCaptor = ArgumentCaptor.forClass(Response.class);
+        responseService.store(requestResponse);
+
+        verify(ticketRepository, times(1)).save(any());
+        verify(responseRepository, times(1)).save(responseCaptor.capture());
+        Response capturedResponse = responseCaptor.getValue();
+        assertEquals(TicketStatus.IN_PROGRESS.getValue(), capturedResponse.getTicket().getStatus());
+        assertEquals(user, capturedResponse.getUser());
+        assertEquals(ticket, capturedResponse.getTicket());
+    }
+
+    @Test
+    public void testCLose_Success() {
+        User user = new User();
+        user.setId(2L); // Define o ID do usuário
+        user.setName("John Doe"); // Exemplo de nome
+        when(userRepository.findById(2L)).thenReturn(Optional.of(user));
+
+        Ticket ticket = new Ticket();
+        ticket.setId(2L); // Define o ID do ticket
+        ticket.setStatus(TicketStatus.CLOSED.getValue());
+        when(ticketRepository.findById(2L)).thenReturn(Optional.of(ticket));
+
+        Response response = new Response();
+        response.setId(2L);
+        response.setDescription("This is a sample response.");
+        response.setDateTime(LocalDateTime.now()); //
+        response.setUser(user); //
+        response.setTicket(ticket);
+
+        ArgumentCaptor<Response> responseCaptor = ArgumentCaptor.forClass(Response.class);
+        responseService.close(requestResponse);
+
+        verify(ticketRepository, times(1)).save(any());
+        verify(responseRepository, times(1)).save(responseCaptor.capture());
+        Response capturedResponse = responseCaptor.getValue();
+        assertEquals(TicketStatus.CLOSED.getValue(), capturedResponse.getTicket().getStatus());
     }
 
     @Test
