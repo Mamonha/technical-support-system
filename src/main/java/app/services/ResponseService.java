@@ -26,7 +26,7 @@ public class ResponseService {
     @Autowired
     protected UserRepository userRepository;
 
-    private Response findUserAndTicket(RequestResponse requestResponse) {
+    public Response findUserAndTicket(RequestResponse requestResponse) {
         Response response = requestResponse.response();
         response.setDateTime(LocalDateTime.now());
         User user = userRepository.findById(requestResponse.getUserId())
@@ -63,6 +63,4 @@ public class ResponseService {
                 .map(ResponseResponse::response)
                 .collect(Collectors.toList());
     }
-
-
 }
