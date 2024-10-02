@@ -70,20 +70,19 @@ public class ServiceResponseTest {
     @Test
     public void testStore_Success() {
         User user = new User();
-        user.setId(1L); // Define o ID do usuário
-        user.setName("John Doe"); // Exemplo de nome
+        user.setId(1L);
+        user.setName("John Doe");
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
         Ticket ticket = new Ticket();
-        ticket.setId(1L); // Define o ID do ticket
+        ticket.setId(1L);
         ticket.setStatus(TicketStatus.OPEN.getValue());
         when(ticketRepository.findById(1L)).thenReturn(Optional.of(ticket));
-
         Response response = new Response();
         response.setId(1L);
         response.setDescription("This is a sample response.");
-        response.setDateTime(LocalDateTime.now()); //
-        response.setUser(user); //
+        response.setDateTime(LocalDateTime.now());
+        response.setUser(user);
         response.setTicket(ticket);
 
         ArgumentCaptor<Response> responseCaptor = ArgumentCaptor.forClass(Response.class);
@@ -100,20 +99,20 @@ public class ServiceResponseTest {
     @Test
     public void testCLose_Success() {
         User user = new User();
-        user.setId(2L); // Define o ID do usuário
-        user.setName("John Doe"); // Exemplo de nome
+        user.setId(2L);
+        user.setName("John Doe");
         when(userRepository.findById(2L)).thenReturn(Optional.of(user));
 
         Ticket ticket = new Ticket();
-        ticket.setId(2L); // Define o ID do ticket
+        ticket.setId(2L);
         ticket.setStatus(TicketStatus.CLOSED.getValue());
         when(ticketRepository.findById(2L)).thenReturn(Optional.of(ticket));
 
         Response response = new Response();
         response.setId(2L);
         response.setDescription("This is a sample response.");
-        response.setDateTime(LocalDateTime.now()); //
-        response.setUser(user); //
+        response.setDateTime(LocalDateTime.now());
+        response.setUser(user);
         response.setTicket(ticket);
 
         ArgumentCaptor<Response> responseCaptor = ArgumentCaptor.forClass(Response.class);
